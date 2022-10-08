@@ -24,9 +24,9 @@
           <Col span="24">
             <FormItem label="专利类型">
               <RadioGroup v-model="tempItem.patentType">
-                <Radio :label="1">类型一</Radio>
-                <Radio :label="2">类型二</Radio>
-                <Radio :label="3">类型三</Radio>
+                <Radio :label="1">发明专利</Radio>
+                <Radio :label="2">实用新型</Radio>
+                <Radio :label="3">外观设计</Radio>
               </RadioGroup>
             </FormItem>
           </Col>
@@ -34,10 +34,9 @@
       <Row>
           <Col span="24">
             <FormItem label="专利状态">
-              <RadioGroup v-model="tempItem.patentStatus">
-                <Radio label="1">状态一</Radio>
-                <Radio label="2">状态二</Radio>
-                <Radio label="3">状态三</Radio>
+              <RadioGroup v-model="tempItem.type">
+                <Radio :label="1">申请</Radio>
+                <Radio :label="2">授权</Radio>
               </RadioGroup>
             </FormItem>
           </Col>

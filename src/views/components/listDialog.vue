@@ -22,12 +22,19 @@
         <template #patentName="{ row }">
           <b>{{ row.patentName }}</b>
         </template>
+        <template #type="{ row }">
+          {{ typeList[row.type] }}
+        </template>
         <template #patentType="{ row }">
           {{ patentTypeList[row.patentType] }}
         </template>
         <template #patentStatus="{ row }">
-          {{ patentStatusList[row.patentStatus] }}
+          <div class="res_type">
+            {{ patentStatusList[row.patentStatus] }}
+            <span class="dot" :class="{'green': row.patentStatus == '2', 'orange': row.patentStatus == '1'}"></span>
+          </div>
         </template>
+        
         <template #action="{ row, index }">
           <div class="action_box">
             <Button style="margin-right: 10px" type="warning" size="small" @click="edit(row, index)">编辑</Button>
@@ -53,6 +60,7 @@
 
 <script>
 import editDialog from "./editDialog.vue";
+import { fetchPost } from '../../api/index.js'
 
 export default {
   components: {
@@ -62,153 +70,22 @@ export default {
     return {
       editIndex: null,
       patentTypeList: {
-        '1': '类型1',
-        '2': '类型厄尔',
-        '3': '类型三'
+        '1': '发明专利',
+        '2': '实用新型',
+        '3': '外观设计'
       },
       patentStatusList: {
-        '1': '状态1',
-        '2': '状态厄尔',
-        '3': '状态三'
+        '1': '失败',
+        '2': '成功',
+      },
+      typeList: {
+        '1': '申请',
+        '2': '授权',
       },
       isListShow: false,
       tempItem: {},
       tempList: [],
-      list: [
-        {
-          patentId: "1c32c6a4-e408-4cbe-94b1-84a7ce649250",
-          fileId: "505c6c82-4da5-479d-a1a1-87170341a65a",
-          patentName: "休息服务驿站",
-          patentStatus: "2",
-          patentType: 3,
-          patentNo: "ZL201730520762.9",
-          patentUser: "程昱",
-          certificateNo: "4647883",
-          applyData: "2017年10月26日",
-          patentee: "上海市政工程设计研究总院(集团)有限公司",
-          address: "200092上海市杨浦区中山北二路901号",
-          announcementDate: "2018年05月15日",
-          announcementNo: "2018年05月15日",
-          createTime: "2022-09-18T07:27:48.000+0000",
-          createBy: null,
-          updateTime: null,
-          updateBy: null,
-        },
-        {
-          patentId: "1eb461f6-db26-4bd6-bc46-af07c367c727",
-          fileId: "df601e51-1e88-45f5-9fbe-a2b0c435d825",
-          patentName: null,
-          patentStatus: "1",
-          patentType: null,
-          patentNo: null,
-          patentUser: null,
-          certificateNo: null,
-          applyData: null,
-          patentee: null,
-          address: null,
-          announcementDate: null,
-          announcementNo: null,
-          createTime: null,
-          createBy: null,
-          updateTime: null,
-          updateBy: null,
-        },
-        {
-          patentId: "38178988-ed3e-4e3c-a173-e39b7cfe1a71",
-          fileId: "11b08868-7885-4a69-b294-e4febb8168f9",
-          patentName: null,
-          patentStatus: "1",
-          patentType: null,
-          patentNo: null,
-          patentUser: null,
-          certificateNo: null,
-          applyData: null,
-          patentee: null,
-          address: null,
-          announcementDate: null,
-          announcementNo: null,
-          createTime: null,
-          createBy: null,
-          updateTime: null,
-          updateBy: null,
-        },
-        {
-          patentId: "4b5e035a-600b-4126-b1e5-3ef702c5ca5f",
-          fileId: "31ba5080-23f2-4146-9974-4c5d64d74119",
-          patentName: "一种固液介质分离处理池",
-          patentStatus: "2",
-          patentType: 1,
-          patentNo: "ZL201610003217.7",
-          patentUser: "许嘉炯;王昊;王如华;王广平;彭夏军;闫东晗",
-          certificateNo: "3051207",
-          applyData: "2016年01月04日",
-          patentee: "上海市政工程设计研究总院(集团)有限公司",
-          address: "200092上海市杨浦区中山北二路901号",
-          announcementDate: "2018年08月28日",
-          announcementNo: "2018年08月28日",
-          createTime: "2022-09-18T07:27:49.000+0000",
-          createBy: null,
-          updateTime: null,
-          updateBy: null,
-        },
-        {
-          patentId: "64dd67fa-a994-4c7b-9401-217481599fb3",
-          fileId: "52b5b0fa-d2b9-49bc-99c3-07b253fe218a",
-          patentName: "公共服务用房(石洞小站)",
-          patentStatus: "2",
-          patentType: 3,
-          patentNo: "ZL201730527670.3",
-          patentUser: "程昱",
-          certificateNo: "4647345",
-          applyData: "2017年10月31日",
-          patentee: "上海市政工程设计研究总院(集团)有限公司",
-          address: "200092上海市杨浦区中山北二路901号",
-          announcementDate: "2018年05月15日",
-          announcementNo: "2018年05月15日",
-          createTime: "2022-09-18T07:27:41.000+0000",
-          createBy: null,
-          updateTime: null,
-          updateBy: null,
-        },
-        {
-          patentId: "8b377252-fa4b-494d-a5f5-10747acb8a45",
-          fileId: "9ffdf57d-a7e8-4732-824c-695abda31e57",
-          patentName: "一种固液介质分离处理池",
-          patentStatus: "2",
-          patentType: 1,
-          patentNo: "ZL201610003217.7",
-          patentUser: "许嘉炯;王昊;王如华;王广平;彭夏军;闫东晗",
-          certificateNo: "3051207",
-          applyData: "2016年01月04日",
-          patentee: "上海市政工程设计研究总院(集团)有限公司",
-          address: "200092上海市杨浦区中山北二路901号",
-          announcementDate: "2018年08月28日",
-          announcementNo: "2018年08月28日",
-          createTime: "2022-09-18T07:27:45.000+0000",
-          createBy: null,
-          updateTime: null,
-          updateBy: null,
-        },
-        {
-          patentId: "c635b414-1138-4811-81fc-2331a934f0b4",
-          fileId: "00df33e4-7f11-4e6d-9884-d9637f425e6f",
-          patentName: null,
-          patentStatus: "1",
-          patentType: null,
-          patentNo: null,
-          patentUser: null,
-          certificateNo: null,
-          applyData: null,
-          patentee: null,
-          address: null,
-          announcementDate: null,
-          announcementNo: null,
-          createTime: null,
-          createBy: null,
-          updateTime: null,
-          updateBy: null,
-        },
-      ],
+      list: [],
       columns: [
         {
           type: 'index',
@@ -226,6 +103,12 @@ export default {
           slot: 'patentName'
         },
         {
+          title: "识别可信度",
+          slot: "patentStatus",
+          align: 'center',
+          width: 100,
+        },
+        {
           title: "专利类型",
           slot: "patentType",
           align: 'center',
@@ -233,10 +116,11 @@ export default {
         },
         {
           title: "专利状态",
-          slot: "patentStatus",
+          slot: "type",
           align: 'center',
           width: 100,
         },
+        
         {
           title: "申请号/专利授权号",
           key: "patentNo",
@@ -278,7 +162,8 @@ export default {
   methods: {
     show(list) {
       console.log("list", list);
-      this.tempList = JSON.parse(JSON.stringify(this.list));
+      this.list = list.data;
+      this.tempList = JSON.parse(JSON.stringify(list.data));
       // console.log(this.tempList === this.list)
       this.isListShow = true;
     },
@@ -317,7 +202,24 @@ export default {
     },
     // 确认导入
     sureHandle() {
-
+      console.log(this.tempList)
+      fetchPost('http://106.15.4.241:8669/ocr/edit', this.tempList)
+        .then(() => {
+          this.hide()
+          this.$Message.success({
+            background: true,
+            content: '导入成功'
+          });
+          // 通知修改数量
+          this.$emit('changeCount')
+        })
+        .catch(err => {
+          console.log('err', err)
+          this.$Message.error({
+            background: true,
+            content: err
+          });
+        })
     },
   },
 };
@@ -326,5 +228,23 @@ export default {
   /deep/ .action_box {
     display: flex;
     // justify-content: space-between;
+  }
+  .res_type {
+    position: relative;
+    .dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      top: 6px;
+      right: 0px;
+      &.green {
+        background-color: rgb(43, 239, 79);
+      }
+      &.orange {
+        background-color: rgb(239, 85, 43);
+      }
+
+    }
   }
 </style>

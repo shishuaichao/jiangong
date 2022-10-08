@@ -18,14 +18,18 @@
       <div class="main_dialog">
         <div class="radio">
           文件类型：
-          <RadioGroup v-model="fileType">
+          <RadioGroup v-model="fileType" @change="fileTypeChange">
             <!-- <Radio label="智能识别"></Radio> -->
             <Radio :label="1">
               <span>专利证书</span>
             </Radio>
+            <Radio :label="2">
+              <span>专利受理通知书</span>
+            </Radio>
             <!-- <Radio label="专利受理通知书"></Radio> -->
           </RadioGroup>
         </div>
+        <div style="color: red; font-size: 12px; margin-top: 10px;">提示：切换类型会清空之前未处理的上传文件，建议处理完后再上传另外类型</div>
         <div class="upload">
           <Upload
             :multiple="true"
@@ -38,8 +42,9 @@
             :on-error="onError"
             :on-success="onSuccess"
             :on-remove="onRemove"
+            :on-preview="preview"
             :default-file-list="arrList"
-            action="http://106.15.4.241:8669/file/add">
+            :action="fileType === 1 ? 'http://106.15.4.241:8669/file/add' : 'http://106.15.4.241:8669/file/acceptance'">
             <div style="padding: 20px 0">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 <p>点击或将文件拖拽到这里上传</p>
@@ -68,7 +73,7 @@
       </div>
     </Modal>
 
-    <list-dialog ref="listDialog"></list-dialog>
+    <list-dialog ref="listDialog" @changeCount="changeCount"></list-dialog>
   </div>
 </template>
 
@@ -102,6 +107,12 @@ export default {
     },
     hide() {
       this.isUploadShow = false
+    },
+
+    fileTypeChange() {
+      this.arrList = [];
+      this.uploadCount = 0;
+      this.successCount = 0;
     },
 
     showNext(list) {
@@ -141,10 +152,14 @@ export default {
       this.uploadCount--
       this.successCount--
     },
+    preview(e) {
+      // console.log('xxx', e)
+    },
+    // 开始处理
     deal() {
       console.log('fileType', this.fileType)
       let arr = []
-      this.arrList.forEach(e => arr.push(e.id))
+      this.arrList.forEach(e => arr.push(e.attachmentid))
       fetchPost('http://106.15.4.241:8669/ocr/', {list: arr})
         .then(res => {
           console.log(res)
@@ -154,6 +169,9 @@ export default {
           console.log('err', err)
         })
     },
+    changeCount() {
+      this.$emit('changeCount')
+    }
   }
 }
 </script>

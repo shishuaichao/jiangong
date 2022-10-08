@@ -35,12 +35,13 @@
         </div>
       </div>
     </transition>
-    <upload-dialog ref="uploadDialog"></upload-dialog>
+    <upload-dialog ref="uploadDialog" @changeCount="showCount"></upload-dialog>
   </div>
 </template>
 
 <script>
 import uploadDialog from './uploadDialog.vue'
+import { fetchPost } from '../../api/index.js'
 
 export default {
   components: {
@@ -64,7 +65,22 @@ export default {
 
     showNext() {
       this.$refs.uploadDialog.show()
+    },
+
+    showCount() {
+      fetchPost('http://106.15.4.241:8669/ocr/statistics', {})
+        .then(res => {
+          console.log('今日处理数量', res)
+          this.totalCount = res?.data?.all
+          this.todayCount = res?.data?.sameDay
+        })
+        .catch(err => {
+          console.log('err', err)
+        })
     }
+  },
+  mounted() {
+    this.showCount()
   }
 }
 </script>
