@@ -12,3 +12,6 @@ app.use(router)
   .use(store)
   .use(ViewUIPlus)
   .mount('#app')
+
+
+  
