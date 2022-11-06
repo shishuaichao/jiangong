@@ -16,6 +16,7 @@
       </div>
     </template>
       <div class="main_dialog">
+        <div style="color: red; font-size: 12px; margin-bottom: 10px;">提示：切换类型会清空之前未处理的上传文件，建议处理完后再上传另外类型</div>
         <div class="radio">
           文件类型：
           <RadioGroup v-model="fileType" @change="fileTypeChange">
@@ -29,7 +30,21 @@
             <!-- <Radio label="专利受理通知书"></Radio> -->
           </RadioGroup>
         </div>
-        <div style="color: red; font-size: 12px; margin-top: 10px;">提示：切换类型会清空之前未处理的上传文件，建议处理完后再上传另外类型</div>
+        <div class="server">
+          <div>服务器选择：</div>
+          <RadioGroup v-model="serverType" @change="serverTypeChange">
+            <div class="server_item">
+              <Radio :label="2">
+                <span>公有云服务器（快速且准确率高）</span>
+              </Radio>
+            </div>
+            <div class="server_item">
+              <Radio :label="1">
+                <span>私有云服务器（保密性高）</span>
+              </Radio>
+            </div>
+          </RadioGroup>
+        </div>
         <div class="upload">
           <Upload
             :multiple="true"
@@ -44,7 +59,7 @@
             :on-remove="onRemove"
             :on-preview="preview"
             :default-file-list="arrList"
-            :action="fileType === 1 ? 'http://106.15.4.241:8669/file/add' : 'http://106.15.4.241:8669/file/acceptance'">
+            :action="url">
             <div style="padding: 20px 0">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 <p>点击或将文件拖拽到这里上传</p>
@@ -55,21 +70,7 @@
         <div class="count_info" v-if="uploadCount">
           共{{uploadCount}}个附件，上传中{{uploadCount - successCount}}个，已完成{{successCount}}个。
         </div>
-        <div class="server">
-          <div>服务器选择：</div>
-          <RadioGroup v-model="serverType">
-            <div class="server_item">
-              <Radio :label="1">
-                <span>私有云服务器（保密性高）</span>
-              </Radio>
-            </div>
-            <div class="server_item">
-              <Radio :label="2">
-                <span>公有云服务器（快速且准确率高）</span>
-              </Radio>
-            </div>
-          </RadioGroup>
-        </div>
+        
       </div>
     </Modal>
 
@@ -88,13 +89,30 @@ export default {
   data() {
     return {
       isUploadShow: false,
-      fileType: 1,
-      serverType: 1,
+      fileType: 1,     // 默认专利证书
+      serverType: 2,   // 默认公有云
       arrList: [],
       uploadCount: 0,
       successCount: 0,
     }
   },
+  computed: {
+    url: function() {
+      if (this.serverType == 2) {
+        if (this.fileType == 1) {
+          return 'http://106.15.4.241:8669/file/add'
+        } else {
+          return 'http://106.15.4.241:8669/file/acceptance'
+        }
+      } else {
+        if (this.fileType == 1) {
+          return 'http://106.15.4.241:8669/local/add'
+        } else {
+          return 'http://106.15.4.241:8669/local/acceptance'
+        }
+      }
+    }
+  },  
   mounted() {
     
   },  
@@ -110,6 +128,11 @@ export default {
     },
 
     fileTypeChange() {
+      this.arrList = [];
+      this.uploadCount = 0;
+      this.successCount = 0;
+    },
+    serverTypeChange() {
       this.arrList = [];
       this.uploadCount = 0;
       this.successCount = 0;

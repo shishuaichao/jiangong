@@ -7,13 +7,13 @@
       :mask-closable="false"
       :draggable="true"
       :sticky="true"
-      width="800"
+      width="1200"
     >
       <!-- 专利列表
       <i-button @click="showNext">编辑</i-button> -->
       <div class="list_dialog">
         <Table
-          width="768"
+          width="1168"
           minHeight="500"
           border
           :columns="columns"
@@ -28,10 +28,10 @@
         <template #patentType="{ row }">
           {{ patentTypeList[row.patentType] }}
         </template>
-        <template #patentStatus="{ row }">
+        <template #recognitionRate="{ row }">
           <div class="res_type">
-            {{ patentStatusList[row.patentStatus] }}
-            <span class="dot" :class="{'green': row.patentStatus == '2', 'orange': row.patentStatus == '1'}"></span>
+            {{ recognitionRateList[row.recognitionRate] }}
+            <span class="dot" :class="{'green': row.recognitionRate == '1', 'blue': row.recognitionRate == '2'}"></span>
           </div>
         </template>
         
@@ -74,7 +74,7 @@ export default {
         '2': '实用新型',
         '3': '外观设计'
       },
-      patentStatusList: {
+      recognitionRateList: {
         '1': '失败',
         '2': '成功',
       },
@@ -104,7 +104,7 @@ export default {
         },
         {
           title: "识别可信度",
-          slot: "patentStatus",
+          slot: "recognitionRate",
           align: 'center',
           width: 100,
         },
@@ -238,11 +238,12 @@ export default {
       border-radius: 50%;
       top: 6px;
       right: 0px;
+      background-color: #f00;
       &.green {
         background-color: rgb(43, 239, 79);
       }
-      &.orange {
-        background-color: rgb(239, 85, 43);
+      &.blue {
+        background-color: #00f;
       }
 
     }
