@@ -70,7 +70,7 @@
         <div class="count_info" v-if="uploadCount">
           共{{uploadCount}}个附件，上传中{{uploadCount - successCount}}个，已完成{{successCount}}个。
         </div>
-        
+        <Spin size="large" fix :show="spinShow"></Spin>
       </div>
     </Modal>
 
@@ -94,6 +94,7 @@ export default {
       arrList: [],
       uploadCount: 0,
       successCount: 0,
+      spinShow: false,
     }
   },
   computed: {
@@ -180,6 +181,7 @@ export default {
     },
     // 开始处理
     deal() {
+      this.spinShow = true
       console.log('fileType', this.fileType)
       let arr = []
       this.arrList.forEach(e => arr.push(e.attachmentid))
@@ -187,6 +189,13 @@ export default {
         .then(res => {
           console.log(res)
           this.showNext(res)
+          this.spinShow = false
+          // if (res?.data?.length) {
+          //   this.showNext(res)
+          //   this.spinShow = false
+          // } else {
+          //   this.deal()
+          // }
         })
         .catch(err => {
           console.log('err', err)
