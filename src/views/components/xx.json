@@ -14,6 +14,7 @@
     "announcementDate": "2018年05月15日",
     "announcementNo": "2018年05月15日",
     "createTime": "2022-09-18T07:27:48.000+0000",
+    "recognitionRate": "1",
     "createBy": null,
     "updateTime": null,
     "updateBy": null
@@ -21,6 +22,7 @@
   {
     "patentId": "1eb461f6-db26-4bd6-bc46-af07c367c727",
     "fileId": "df601e51-1e88-45f5-9fbe-a2b0c435d825",
+    "recognitionRate": "2",
     "patentName": null,
     "patentStatus": "1",
     "patentType": null,
@@ -40,6 +42,7 @@
   {
     "patentId": "38178988-ed3e-4e3c-a173-e39b7cfe1a71",
     "fileId": "11b08868-7885-4a69-b294-e4febb8168f9",
+    "recognitionRate": "110",
     "patentName": null,
     "patentStatus": "1",
     "patentType": null,

@@ -16,7 +16,7 @@
       </div>
     </template>
       <div class="main_dialog">
-        <div style="color: red; font-size: 12px; margin-bottom: 10px;">提示：切换类型会清空之前未处理的上传文件，建议处理完后再上传另外类型</div>
+        <!-- <div style="color: red; font-size: 12px; margin-bottom: 10px;">提示：切换类型会清空之前未处理的上传文件，建议处理完后再上传另外类型</div> -->
         <div class="radio">
           文件类型：
           <RadioGroup v-model="fileType" @change="fileTypeChange">
@@ -128,14 +128,14 @@ export default {
     },
 
     fileTypeChange() {
-      this.arrList = [];
-      this.uploadCount = 0;
-      this.successCount = 0;
+      // this.arrList = [];
+      // this.uploadCount = 0;
+      // this.successCount = 0;
     },
     serverTypeChange() {
-      this.arrList = [];
-      this.uploadCount = 0;
-      this.successCount = 0;
+      // this.arrList = [];
+      // this.uploadCount = 0;
+      // this.successCount = 0;
     },
 
     showNext(list) {

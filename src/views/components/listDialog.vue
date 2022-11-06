@@ -30,7 +30,7 @@
         </template>
         <template #recognitionRate="{ row }">
           <div class="res_type">
-            {{ recognitionRateList[row.recognitionRate] }}
+            <!-- {{ recognitionRateList[row.recognitionRate] }} -->
             <span class="dot" :class="{'green': row.recognitionRate == '1', 'blue': row.recognitionRate == '2'}"></span>
           </div>
         </template>
@@ -61,6 +61,7 @@
 <script>
 import editDialog from "./editDialog.vue";
 import { fetchPost } from '../../api/index.js'
+import xxlist from './xx.json'
 
 export default {
   components: {
@@ -164,7 +165,7 @@ export default {
       console.log("list", list);
       this.list = list.data;
       this.tempList = JSON.parse(JSON.stringify(list.data));
-      // console.log(this.tempList === this.list)
+      // this.tempList = xxlist   // 测试用
       this.isListShow = true;
     },
     hide() {
@@ -231,13 +232,15 @@ export default {
   }
   .res_type {
     position: relative;
+    width: 60px;
+    height: 40px;
     .dot {
       position: absolute;
-      width: 10px;
-      height: 10px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
-      top: 6px;
-      right: 0px;
+      top: 10px;
+      right: 16px;
       background-color: #f00;
       &.green {
         background-color: rgb(43, 239, 79);

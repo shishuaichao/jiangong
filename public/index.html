@@ -8,27 +8,10 @@
     <title><%= htmlWebpackPlugin.options.APP_TITLE %></title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="zhuanliluru"></div>
     <!-- built files will be auto injected -->
   </body>
   <script>
-    let tokenName = 'Admin-Token-V2'
-    function getToken() {
-      let arr = document.cookie.split('; ')
-      return arr.find(e => {
-        return e.split('=')[0] === tokenName && e.split('=')[1]
-      })
-    }
-
-    let app = document.getElementById('app')
-    app.style.display = 'none'
-    let timer = setInterval(() => {
-      if (getToken()) {
-        app.style.display = 'block'
-        // clearInterval(timer)    // 登录后是否需要清除定时器
-      } else {
-        app.style.display = 'none'
-      }
-    }, 1000)
+    
   </script>
 </html>
