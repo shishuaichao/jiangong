@@ -9,46 +9,63 @@
       :sticky="true"
       width="1200"
     >
-      <!-- 专利列表
-      <i-button @click="showNext">编辑</i-button> -->
-      <div class="list_dialog">
-        <Table
-          width="1168"
-          minHeight="500"
-          border
-          :columns="columns"
-          :data="tempList"
-        >
-        <template #patentName="{ row }">
-          <b>{{ row.patentName }}</b>
-        </template>
-        <template #type="{ row }">
-          {{ typeList[row.type] }}
-        </template>
-        <template #patentType="{ row }">
-          {{ patentTypeList[row.patentType] }}
-        </template>
-        <template #recognitionRate="{ row }">
-          <div class="res_type">
-            <!-- {{ recognitionRateList[row.recognitionRate] }} -->
-            <span class="dot" :class="{'green': row.recognitionRate == '1', 'blue': row.recognitionRate == '2'}"></span>
+      <!-- 专利列表-->
+      <Tabs type="card" :animated="false" v-model="tabIndex">
+        <TabPane label="专利信息" name="1">
+          <div class="list_dialog">
+            <Table
+              width="1168"
+              minHeight="500"
+              border
+              :columns="columns"
+              :data="tempList"
+            >
+            <template #patentName="{ row }">
+              <b>{{ row.patentName }}</b>
+            </template>
+            <template #type="{ row }">
+              {{ typeList[row.type] }}
+            </template>
+            <template #patentType="{ row }">
+              {{ patentTypeList[row.patentType] }}
+            </template>
+            <template #recognitionRate="{ row }">
+              <div class="res_type">
+                <span class="dot" :class="{'green': row.recognitionRate == '1', 'blue': row.recognitionRate == '2'}"></span>
+              </div>
+            </template>
+            
+            <template #action="{ row, index }">
+              <div class="action_box">
+                <Button style="margin-right: 10px" type="warning" size="small" @click="edit(row, index)">编辑</Button>
+                <Tooltip v-if="row.edited" content="复原到上传时" placement="top">
+                  <Button style="margin-right: 10px" type="primary" size="small" @click="restore(row, index)">复原</Button>
+                </Tooltip>
+                <Button type="error" size="small" @click="del(row, index)">删除</Button>
+              </div>
+            </template>
+            </Table>
           </div>
-        </template>
-        
-        <template #action="{ row, index }">
-          <div class="action_box">
-            <Button style="margin-right: 10px" type="warning" size="small" @click="edit(row, index)">编辑</Button>
-            <Tooltip v-if="row.edited" content="复原到上传时" placement="top">
-              <Button style="margin-right: 10px" type="primary" size="small" @click="restore(row, index)">复原</Button>
-            </Tooltip>
-            <Button type="error" size="small" @click="del(row, index)">删除</Button>
+        </TabPane>
+        <TabPane label="不能识别的" name="2">
+          <div class="list_dialog">
+            <Table
+              width="260"
+              minHeight="500"
+              border
+              :columns="columnsNo"
+              :data="tempListNo"
+            >
+            <template #patentName="{ row }">
+              <b>{{ row.patentName }}</b>
+            </template>
+            </Table>
           </div>
-        </template>
-        </Table>
-      </div>
+        </TabPane>
+      </Tabs>
       <template #footer>
         <div style="text-align: center">
-          <Button style="margin-right: 50px" type="primary" @click="sureHandle" :disabled="!list.length">确认导入</Button>
+          <Button style="margin-right: 50px" type="primary" @click="sureHandle" :disabled="!tempList.length || tabIndex == '2'">确认导入</Button>
           <Button @click="isListShow = false">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</Button>
         </div>
       </template>
@@ -69,6 +86,7 @@ export default {
   },
   data() {
     return {
+      tabIndex: '1',
       editIndex: null,
       patentTypeList: {
         '1': '发明专利',
@@ -86,7 +104,25 @@ export default {
       isListShow: false,
       tempItem: {},
       tempList: [],
+      tempListNo: [],
       list: [],
+      columnsNo: [
+        {
+          type: 'index',
+          height: 48,
+          width: 60,
+          align: 'center',
+          fixed: "left",
+        },
+        {
+          title: "专利名称",
+          // key: "patentName",
+          width: 200,
+          fixed: "left",
+          align: 'center',
+          slot: 'patentName'
+        }
+      ],
       columns: [
         {
           type: 'index',
@@ -159,13 +195,20 @@ export default {
         },
       ],
     };
-  },
+  }, 
   methods: {
     show(list) {
-      console.log("list", list);
-      this.list = list.data;
-      this.tempList = JSON.parse(JSON.stringify(list.data));
-      // this.tempList = xxlist   // 测试用
+      console.log("list", list)
+      this.list = list?.data || [];   // 正式用
+      // this.list = xxlist   // 测试用
+      console.log('this.list', this.list.data)
+      this.tempList = this.list.filter(e => {
+        return e.patentStatus == '2'
+      })
+      this.tempListNo = this.list.filter(e => {
+        return e.patentStatus != '2'
+      })
+      console.log(this.tempList, this.tempListNo)
       this.isListShow = true;
     },
     hide() {
